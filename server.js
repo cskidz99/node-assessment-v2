@@ -117,22 +117,6 @@ app.delete('/api/accounts/:accountId', function(req,res,next){
 //   }
 // });
 
-// app.delete('/api/accounts/:accountId', function(req,res,next){
-//   var result = accounts.find(
-//     function (value){
-//       return (value.id == req.params.accountId)
-//     }
-//   );
-//   if (result) {
-//     console.log(result);
-//     accounts.splice(result)
-//     res.status(200).json('account deleted');
-//   } else {
-//     res.status(404).json('account could not be found');
-//   }
-// })
-
-
 app.listen('3000', function(){
   console.log("Successfully listening on : 3000")
 });
