@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var accounts = require('./accounts.json');
+var _ = require('lodash');
 
 var app = express();
 app.use(bodyParser.json());
@@ -49,7 +50,7 @@ app.get('/api/accounts/:accountId', function(req,res,next){
   if (result) {
     res.status(200).json(result);
   } else {
-    res.status(404).json('account could not be found');
+    res.status(404).send('account could not be found');
   }
 });
 
@@ -89,6 +90,17 @@ app.post('/api/accounts/approvedstates/:accountId', function(req,res,next){
   }
 });
 
+app.delete('/api/accounts/approvedstates/:accountId', function(req,res,next){
+  var id = +req.params.accountId;
+  var deleteState = req.query.state;
+  accounts.map(function(e, i) {
+       if (e.id === id) {
+           e.approved_states.splice(e.approved_states.indexOf(deleteState), 1);
+           res.status(200).json(e.approved_states);
+       }
+   });
+});
+
 app.delete('/api/accounts/:accountId', function(req,res,next){
   var result = accounts.find(
     function (value){
@@ -96,26 +108,29 @@ app.delete('/api/accounts/:accountId', function(req,res,next){
     }
   );
   if (result) {
-    console.log(result.id);
+    // console.log(result.id);
     accounts.splice((parseInt(result.id) - 1),1);
-    res.status(200).json('account deleted');
+    res.sendStatus(200);
     // next();
   } else {
     res.status(404).json('account could not be found');
   }
 });
 
-// app.post('/api/accounts/cardtype/:accountId', function(req,res,next){
-//   console.log(req.params.accountId);
-//   for(var i=0;i<accounts.length;i++){
-//     if(accounts[i].id == req.params.accountId){
-//       accounts[i].card_type = req.body.card_type;
-//       res.status(200).json(accounts[i]);
-//     } else {
-//       res.status(404).json('acount could not be found');
-//     }
-//   }
-// });
+app.put('/api/accounts/:accountId', function(req,res,next){
+  var id = Number(req.params.accountId);
+  accounts.map(function(e,i){
+    if(e.id === id){
+      for(var key in req.body){
+        e[key] = req.body[key];
+      }
+      res.status(200).json(e);
+    }
+  });
+});
+
+
+
 
 app.listen('3000', function(){
   console.log("Successfully listening on : 3000")
