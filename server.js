@@ -1,7 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var accounts = require('./accounts.json');
-var _ = require('lodash');
 
 var app = express();
 app.use(bodyParser.json());
@@ -108,8 +107,8 @@ app.delete('/api/accounts/:accountId', function(req,res,next){
     }
   );
   if (result) {
-    // console.log(result.id);
-    accounts.splice((parseInt(result.id) - 1),1);
+    // console.log(result);
+    accounts.splice(accounts.indexOf(result),1);
     res.sendStatus(200);
     // next();
   } else {
@@ -137,3 +136,16 @@ app.listen('3000', function(){
 });
 
 module.exports = app;
+
+// Isaac
+// app.post('/api/users/language/:id', function(req,res,next){
+//   var lang = req.body.language;
+//   var id = Number(req.params.id);
+//   var result = {};
+//   users.map(function(e){
+//     if (e.id === id){
+//       e.language = lang;
+//       res.json(e);
+//     }
+//   });
+// });
